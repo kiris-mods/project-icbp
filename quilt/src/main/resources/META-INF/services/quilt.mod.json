@@ -1,0 +1,48 @@
+{
+	"schema_version": 1,
+	"quilt_loader": {
+		"group": "projecticbp",
+		"id": "${mod_id}",
+		"version": "${version}",
+		"metadata": {
+			"name": "${mod_name}",
+			"description": "${description}",
+			"contributors": {
+				"KiriCattus": "Owner/Author",
+				"Upcraft": "Owner/Author"
+			},
+			"contact": {
+				"homepage": "${display_url}",
+				"issues": "${source}/issues",
+				"sources": "${source}"
+			},
+			"icon": "icon.png"
+		},
+		"license": {
+			"name": "Lesser General Public License v2.1",
+			"id": "LGPL-2.1",
+			"url": "https://github.com/kiris-mods/project-icbp/blob/dev/LICENSE.md"
+		},
+		"entrypoints": {
+			"init": "dev.tophatcat.projecticbp.ProjectICBP"
+		},
+		"depends": [
+			{
+				"id": "quilt_loader",
+				"versions": ">=${quilt_loader_version}"
+			},
+			{
+				"id": "minecraft",
+				"versions": "${minecraft_version_range}"
+			}
+		]
+	},
+	"modmenu": {
+		"links": {
+			"modmenu.discord": "${discord}",
+			"modmenu.modrinth": "${modrinth_url}",
+			"modmenu.curseforge": "${curseforge_url}"
+		},
+		"update_checker": true
+	}
+}
