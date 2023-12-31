@@ -2,6 +2,7 @@ plugins {
 	id 'idea'
 	id 'maven-publish'
 	id 'net.neoforged.gradle' version '[6.0.18,6.2)'
+	id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
 }
 
 base {
@@ -28,7 +29,6 @@ minecraft {
 		client {
 			workingDirectory project.file('run')
 			ideaModule "${rootProject.name}.${project.name}.main"
-
 			mods {
 				modClientRun {
 					source sourceSets.main
@@ -78,7 +78,8 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 dependencies {
 	minecraft "net.neoforged:forge:${minecraft_version}-${neoforge_version}"
 	compileOnly project(":common")
-	implementation "software.bernie.geckolib:geckolib-fabric-${minecraft_version}:${geckolib_version_neoforge}"
+	implementation fg.deobf("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version_neoforge}")
+	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 
 // NeoGradle compiles the game, but we don't want to add our common code to the game's code
