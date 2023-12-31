@@ -24,16 +24,22 @@
 			"url": "https://github.com/kiris-mods/project-icbp/blob/dev/LICENSE.md"
 		},
 		"entrypoints": {
-			"init": "dev.tophatcat.projecticbp.ProjectICBP"
+			"init": "dev.tophatcat.projecticbp.ProjectICBP",
+			"client_init": "dev.tophatcat.projecticbp.client.QuiltBallisticRendering"
 		},
 		"depends": [
 			{
 				"id": "quilt_loader",
 				"versions": ">=${quilt_loader_version}"
 			},
+			//TODO Add QSL here. (Yes I know this isn't a comment)
 			{
 				"id": "minecraft",
 				"versions": "${minecraft_version_range}"
+			},
+			{
+				"id": "geckolib",
+				"versions": ">=${geckolib_version_quilt}"
 			}
 		]
 	},

@@ -16,14 +16,14 @@
   "icon": "logo.png",
   "environment": "*",
   "entrypoints": {
-    "main": [
-      "dev.tophatcat.projecticbp.ProjectICBP"
-    ]
+    "main": [ "dev.tophatcat.projecticbp.ProjectICBP" ],
+    "client": [ "dev.tophatcat.projecticbp.client.FabricBallisticRendering" ]
   },
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}",
+    "geckolib": "${geckolib_version_fabric}",
     "java": ">=17"
   },
   "custom": {
