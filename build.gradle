@@ -75,13 +75,13 @@ subprojects {
 	processResources {
 		def expandProps = [
 			"version"                      : version,
-			"group"                        : project.group,
+			"mod_group"                    : project.mod_group,
 			"mod_name"                     : mod_name,
 			"mod_author"                   : mod_author,
 			"mod_id"                       : mod_id,
 			"license"                      : license,
 			"description"                  : project.description,
-			"source"                       : project.source,
+			"mod_source"                   : project.mod_source,
 			"discord"                      : discord,
 			"display_url"                  : display_url,
 			"curseforge_url"               : curseforge_url,

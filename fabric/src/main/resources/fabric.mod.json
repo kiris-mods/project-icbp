@@ -9,8 +9,8 @@
   ],
   "contact": {
     "homepage": "${display_url}",
-    "sources": "${source}",
-    "issues": "${source}/issues"
+    "sources": "${mod_source}",
+    "issues": "${mod_source}/issues"
   },
   "license": "${license}",
   "icon": "logo.png",

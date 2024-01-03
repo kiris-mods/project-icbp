@@ -1,5 +1,5 @@
 <h1>Project Intercontinental Ballistic Penguin</h1>
-<h5>Oh look a cute friendly penguin... OH LOOK A PENGUIN CHARGING AT US!!!</h5>
+<h5>Oh look a cute friendly penguin... OH LOOK A PENGUIN CHARGING AT US!!! Project Intercontinental Ballistic Penguin!</h5>
 
 <a href="https://discord.tophatcat.dev">
     <img src="https://img.shields.io/badge/Discord-CattusMods-brightgreen.svg?style=flat&logo=Discord" alt="Discord server invite."/>

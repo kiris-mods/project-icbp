@@ -1,7 +1,7 @@
 {
 	"schema_version": 1,
 	"quilt_loader": {
-		"group": "${group}",
+		"group": "${mod_group}",
 		"id": "projecticbp",
 		"version": "${version}",
 		"metadata": {
@@ -13,14 +13,14 @@
 			},
 			"contact": {
 				"homepage": "${display_url}",
-				"issues": "${source}/issues",
-				"sources": "${source}"
+				"issues": "${mod_source}/issues",
+				"sources": "${mod_source}"
 			},
 			"icon": "logo.png",
 			"license": {
 				"name": "Lesser General Public License v2.1",
 				"id": "${license}",
-				"url": "${source}/blob/dev/LICENSE.md"
+				"url": "${mod_source}/blob/dev/LICENSE.md"
 			}
 		},
 		"intermediate_mappings": "net.fabricmc:intermediary",
