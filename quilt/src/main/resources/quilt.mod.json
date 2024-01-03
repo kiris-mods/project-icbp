@@ -2,7 +2,7 @@
 	"schema_version": 1,
 	"quilt_loader": {
 		"group": "${group}",
-		"id": "${mod_id}",
+		"id": "projecticbp",
 		"version": "${version}",
 		"metadata": {
 			"name": "${mod_name}",
@@ -16,16 +16,17 @@
 				"issues": "${source}/issues",
 				"sources": "${source}"
 			},
-			"icon": "icon.png"
+			"icon": "logo.png",
+			"license": {
+				"name": "Lesser General Public License v2.1",
+				"id": "${license}",
+				"url": "${source}/blob/dev/LICENSE.md"
+			}
 		},
-		"license": {
-			"name": "Lesser General Public License v2.1",
-			"id": "LGPL-2.1",
-			"url": "https://github.com/kiris-mods/project-icbp/blob/dev/LICENSE.md"
-		},
+		"intermediate_mappings": "net.fabricmc:intermediary",
 		"entrypoints": {
 			"init": "dev.tophatcat.projecticbp.ProjectICBPQuilt",
-			"client_init": "dev.tophatcat.projecticbp.client.QuiltBallisticRendering"
+			"client_init": "dev.tophatcat.projecticbp.client.BallisticRenderingQuilt"
 		},
 		"depends": [
 			{

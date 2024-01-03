@@ -1,7 +1,7 @@
 plugins {
 	id 'idea'
 	id 'maven-publish'
-	id 'org.quiltmc.loom' version '1.2.+'
+	id 'org.quiltmc.loom' version '1.4.+'
 }
 
 base {
@@ -25,6 +25,12 @@ dependencies {
 loom {
 	if (project(":common").file("src/main/resources/${mod_id}.accesswidener").exists()) {
 		accessWidenerPath.set(project(":common").file("src/main/resources/${mod_id}.accesswidener"))
+	}
+
+	mods {
+		"${mod_id}" {
+			sourceSet("main")
+		}
 	}
 
 	runs {
@@ -83,4 +89,10 @@ publishing {
 			url "file://" + System.getenv("local_maven")
 		}
 	}
+}
+
+// messy workaround for bug in quilt loom 1.3.3
+project.configurations.configureEach {
+	exclude(group: "net.fabricmc", module: "fabric-loader")
+	exclude(group: "net.fabricmc.fabric-api")
 }
