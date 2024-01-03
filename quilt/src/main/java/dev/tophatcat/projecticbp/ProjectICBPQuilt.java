@@ -1,5 +1,6 @@
 package dev.tophatcat.projecticbp;
 
+import com.google.common.base.Suppliers;
 import dev.tophatcat.projecticbp.entities.BallisticPenguin;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -20,14 +21,14 @@ public class ProjectICBPQuilt implements ModInitializer {
     }
 
     private void setUpMobs() {
-        ProjectICBPCommon.BALLISTIC_PENGUIN = Registry.register(BuiltInRegistries.ENTITY_TYPE,
+        ProjectICBPCommon.BALLISTIC_PENGUIN = Suppliers.ofInstance(Registry.register(BuiltInRegistries.ENTITY_TYPE,
             new ResourceLocation(ProjectICBPCommon.MOD_ID, "ballistic_penguin"),
             QuiltEntityTypeBuilder.createMob()
                 .entityFactory(BallisticPenguin::new)
                 .defaultAttributes(BallisticPenguin.createAttributes())
-                .setDimensions(EntityDimensions.fixed(1.0F, 1.0F))
+                .setDimensions(EntityDimensions.fixed(0.8F, 1.5F))
                 .spawnGroup(MobCategory.CREATURE)
                 .maxChunkTrackingRange(10)
-                .build());
+                .build()));
     }
 }

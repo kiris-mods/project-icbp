@@ -1,5 +1,6 @@
 package dev.tophatcat.projecticbp;
 
+import com.google.common.base.Suppliers;
 import dev.tophatcat.projecticbp.entities.BallisticPenguin;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -18,7 +19,7 @@ public class ProjectICBPFabric implements ModInitializer {
     }
 
     private void setUpMobs() {
-        ProjectICBPCommon.BALLISTIC_PENGUIN = Registry.register(BuiltInRegistries.ENTITY_TYPE,
+        ProjectICBPCommon.BALLISTIC_PENGUIN = Suppliers.ofInstance(Registry.register(BuiltInRegistries.ENTITY_TYPE,
             new ResourceLocation(ProjectICBPCommon.MOD_ID, "ballistic_penguin"),
             FabricEntityTypeBuilder.createMob()
                 .entityFactory(BallisticPenguin::new)
@@ -26,6 +27,6 @@ public class ProjectICBPFabric implements ModInitializer {
                 .dimensions(EntityDimensions.fixed(0.8F, 1.5F))
                 .spawnGroup(MobCategory.CREATURE)
                 .trackRangeChunks(10)
-                .build());
+                .build()));
     }
 }

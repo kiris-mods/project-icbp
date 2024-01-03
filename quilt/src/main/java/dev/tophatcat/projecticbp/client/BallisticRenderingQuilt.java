@@ -9,6 +9,6 @@ public class BallisticRenderingQuilt implements ClientModInitializer {
 
     @Override
     public void onInitializeClient(ModContainer mod) {
-        EntityRendererRegistry.register(ProjectICBPCommon.BALLISTIC_PENGUIN, BallisticPenguinRenderer::new);
+        EntityRendererRegistry.register(ProjectICBPCommon.BALLISTIC_PENGUIN.get(), BallisticPenguinRenderer::new);
     }
 }

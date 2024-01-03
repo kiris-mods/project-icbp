@@ -8,6 +8,6 @@ public class BallisticRenderingFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        EntityRendererRegistry.register(ProjectICBPCommon.BALLISTIC_PENGUIN, BallisticPenguinRenderer::new);
+        EntityRendererRegistry.register(ProjectICBPCommon.BALLISTIC_PENGUIN.get(), BallisticPenguinRenderer::new);
     }
 }
