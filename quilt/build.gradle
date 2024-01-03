@@ -15,6 +15,7 @@ dependencies {
 	modImplementation("org.quiltmc:qsl:${quilt_sl_version}") {
 		exclude group: "net.fabricmc"
 	}
+	modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:${quilted_fabric_api_version}"
 	implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
 	compileOnly project(":common")
 	modImplementation "com.terraformersmc:modmenu:${modmenu_version_quilt}"

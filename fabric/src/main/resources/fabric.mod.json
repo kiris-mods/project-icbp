@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "kirisutils",
+  "id": "projecticbp",
   "version": "${version}",
   "name": "${mod_name}",
   "description": "${description}",
@@ -16,8 +16,12 @@
   "icon": "logo.png",
   "environment": "*",
   "entrypoints": {
-    "main": [ "dev.tophatcat.projecticbp.ProjectICBP" ],
-    "client": [ "dev.tophatcat.projecticbp.client.FabricBallisticRendering" ]
+    "main": [
+      "dev.tophatcat.projecticbp.ProjectICBPFabric"
+    ],
+    "client": [
+      "dev.tophatcat.projecticbp.client.BallisticRenderingFabric"
+    ]
   },
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",

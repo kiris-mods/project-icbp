@@ -1,7 +1,7 @@
 {
 	"schema_version": 1,
 	"quilt_loader": {
-		"group": "projecticbp",
+		"group": "${group}",
 		"id": "${mod_id}",
 		"version": "${version}",
 		"metadata": {
@@ -24,7 +24,7 @@
 			"url": "https://github.com/kiris-mods/project-icbp/blob/dev/LICENSE.md"
 		},
 		"entrypoints": {
-			"init": "dev.tophatcat.projecticbp.ProjectICBP",
+			"init": "dev.tophatcat.projecticbp.ProjectICBPQuilt",
 			"client_init": "dev.tophatcat.projecticbp.client.QuiltBallisticRendering"
 		},
 		"depends": [
@@ -32,10 +32,13 @@
 				"id": "quilt_loader",
 				"versions": ">=${quilt_loader_version}"
 			},
-			//TODO Add QSL here. (Yes I know this isn't a comment)
+			{
+				"id": "quilted_fabric_api",
+				"version": ">=${quilted_fabric_api_version}"
+			},
 			{
 				"id": "minecraft",
-				"versions": "${minecraft_version_range}"
+				"versions": "1.20.1"
 			},
 			{
 				"id": "geckolib",

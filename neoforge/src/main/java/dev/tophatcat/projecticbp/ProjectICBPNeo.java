@@ -1,7 +1,7 @@
 package dev.tophatcat.projecticbp;
 
 import dev.tophatcat.projecticbp.client.BallisticPenguinRenderer;
-import dev.tophatcat.projecticbp.entities.BallisticPenguinEntity;
+import dev.tophatcat.projecticbp.entities.BallisticPenguin;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,17 +16,17 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 @Mod(ProjectICBPCommon.MOD_ID)
-public class ProjectICBP {
+public class ProjectICBPNeo {
 
     public static final DeferredRegister<EntityType<?>> ENTITY_TYPE_DEFERRED_REGISTER
         = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ProjectICBPCommon.MOD_ID);
-    public static final RegistryObject<EntityType<BallisticPenguinEntity>> BALLISTIC_PENGUIN
+    public static final RegistryObject<EntityType<BallisticPenguin>> BALLISTIC_PENGUIN
         = ENTITY_TYPE_DEFERRED_REGISTER.register("ballistic_penguin",
-        () -> EntityType.Builder.of(BallisticPenguinEntity::new, MobCategory.CREATURE)
+        () -> EntityType.Builder.of(BallisticPenguin::new, MobCategory.CREATURE)
             //.sized(1.0f, 1.0f)
             .build("ballistic_penguin"));
 
-    public ProjectICBP() {
+    public ProjectICBPNeo() {
         ProjectICBPCommon.init();
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         bus.addListener(this::registerAttributes);
@@ -36,7 +36,7 @@ public class ProjectICBP {
     }
 
     private void registerAttributes(final EntityAttributeCreationEvent event) {
-        event.put(BALLISTIC_PENGUIN.get(), BallisticPenguinEntity.setUpMobAttributes().build());
+        event.put(BALLISTIC_PENGUIN.get(), BallisticPenguin.createAttributes().build());
     }
 
     private void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {

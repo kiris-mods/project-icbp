@@ -4,7 +4,7 @@ import dev.tophatcat.projecticbp.ProjectICBPCommon;
 import dev.tophatcat.projecticbp.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
-public class FabricPlatformHelper implements IPlatformHelper {
+public class PlatformHelperFabric implements IPlatformHelper {
 
     @Override
     public String getPlatformName() {
