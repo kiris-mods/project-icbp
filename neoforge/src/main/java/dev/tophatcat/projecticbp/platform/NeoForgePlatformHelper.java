@@ -2,8 +2,8 @@ package dev.tophatcat.projecticbp.platform;
 
 import dev.tophatcat.projecticbp.ProjectICBPCommon;
 import dev.tophatcat.projecticbp.platform.services.IPlatformHelper;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLLoader;
 
 public class NeoForgePlatformHelper implements IPlatformHelper {
 

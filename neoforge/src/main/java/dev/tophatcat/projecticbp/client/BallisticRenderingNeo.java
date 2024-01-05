@@ -1,7 +1,7 @@
 package dev.tophatcat.projecticbp.client;
 
 import dev.tophatcat.projecticbp.ProjectICBPCommon;
-import net.minecraftforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 public class BallisticRenderingNeo {
 

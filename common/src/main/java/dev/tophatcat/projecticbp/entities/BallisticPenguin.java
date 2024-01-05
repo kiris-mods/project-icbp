@@ -88,6 +88,11 @@ public class BallisticPenguin extends Monster implements GeoAnimatable {
         return super.interactAt(player, hitPos, hand);
     }
 
+    @Override
+    public boolean isPushedByFluid() {
+        return false;
+    }
+
     //Geckolib stuff start
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
@@ -102,17 +107,4 @@ public class BallisticPenguin extends Monster implements GeoAnimatable {
     public double getTick(Object object) {
         return 0;
     }
-    //Geckolib stuff end.
-
-    @Override
-    public boolean isPushedByFluid() {
-        return false;
-    }
-
-    @Override
-    public boolean canBreatheUnderwater() {
-        return true;
-    }
-
-
 }

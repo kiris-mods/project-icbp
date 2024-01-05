@@ -2,26 +2,24 @@ package dev.tophatcat.projecticbp;
 
 import dev.tophatcat.projecticbp.client.BallisticRenderingNeo;
 import dev.tophatcat.projecticbp.entities.BallisticPenguin;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 @Mod(ProjectICBPCommon.MOD_ID)
 public class ProjectICBPNeo {
 
     private static final DeferredRegister<EntityType<?>> ENTITIES
-        = DeferredRegister.create(ForgeRegistries.ENTITY_TYPES, ProjectICBPCommon.MOD_ID);
+        = DeferredRegister.create(Registries.ENTITY_TYPE, ProjectICBPCommon.MOD_ID);
 
-    public ProjectICBPNeo() {
+    public ProjectICBPNeo(IEventBus bus) {
         ProjectICBPCommon.init();
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         setUpMobs();
         ENTITIES.register(bus);
         bus.addListener(this::registerAttributes);
