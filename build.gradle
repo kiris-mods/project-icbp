@@ -68,50 +68,42 @@ subprojects {
 	}
 
 	tasks.withType(JavaCompile).configureEach {
+
 		it.options.encoding = 'UTF-8'
 		it.options.getRelease().set(17)
 	}
 
 	processResources {
 		def expandProps = [
-			"version"                      : version,
-			"mod_group"                    : project.mod_group,
-			"mod_name"                     : mod_name,
-			"mod_author"                   : mod_author,
-			"mod_id"                       : mod_id,
-			"license"                      : license,
-			"description"                  : project.description,
-			"mod_source"                   : project.mod_source,
-			"discord"                      : discord,
-			"display_url"                  : display_url,
-			"curseforge_url"               : curseforge_url,
-			"modrinth_url"                 : modrinth_url,
-			"credits"                      : credits,
-			"minecraft_version"            : minecraft_version,
-			"minecraft_version_range"      : minecraft_version_range,
-			"pack_format_version"          : pack_format_version,
+			"version"                       : version,
+			"mod_group"                     : project.mod_group,
+			"mod_name"                      : mod_name,
+			"mod_author"                    : mod_author,
+			"mod_id"                        : mod_id,
+			"license"                       : license,
+			"description"                   : project.description,
+			"mod_source"                    : project.mod_source,
+			"discord"                       : discord,
+			"display_url"                   : display_url,
+			"curseforge_url"                : curseforge_url,
+			"modrinth_url"                  : modrinth_url,
+			"credits"                       : credits,
 
-			"fabric_version"               : fabric_version,
-			"fabric_loader_version"        : fabric_loader_version,
+			"minecraft_version"             : minecraft_version,
+			"minecraft_version_range"       : minecraft_version_range,
+			"pack_format_version"           : pack_format_version,
 
-			"neoforge_version"             : neoforge_version,
-			"neoforge_loader_version_range": neoforge_loader_version_range,
+			"fabric_version"                : fabric_version,
+			"fabric_loader_version"         : fabric_loader_version,
 
-			"forge_version"                : forge_version,
-			"forge_loader_version_range"   : forge_loader_version_range,
+			"neoforge_version"              : neoforge_version,
+			"neoforge_version_range"        : neoforge_version_range,
+			"neoforge_loader_version_range" : neoforge_loader_version_range,
 
-			"quilt_sl_version"             : quilt_sl_version,
-			"quilt_loader_version"         : quilt_loader_version,
-			"quilt_loader_version_range"   : quilt_loader_version_range,
-			"quilted_fabric_api_version"   : quilted_fabric_api_version,
-
-			"geckolib_version_fabric"      : geckolib_version_fabric,
-			"geckolib_version_quilt"       : geckolib_version_quilt,
-			"geckolib_version_neoforge"    : geckolib_version_neoforge,
-			"geckolib_version_forge"       : geckolib_version_forge,
-
-			"modmenu_version_fabric"       : modmenu_version_fabric,
-			"modmenu_version_quilt"       : modmenu_version_quilt
+			"quilt_sl_version"              : quilt_sl_version,
+			"quilt_loader_version"          : quilt_loader_version,
+			"quilt_loader_version_range"    : quilt_loader_version_range,
+			"quilted_fabric_api_version"    : quilted_fabric_api_version
 		]
 
 		filesMatching(['pack.mcmeta', 'fabric.mod.json', 'quilt.mod.json', 'META-INF/mods.toml', '*.mixins.json']) {
@@ -127,3 +119,4 @@ subprojects {
 		enabled = false
 	}
 }
+

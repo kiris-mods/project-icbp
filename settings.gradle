@@ -33,6 +33,5 @@ rootProject.name = 'project-icbp'
 include("common")
 include("fabric")
 include("neoforge")
-include("forge")
-include("quilt")
+//include("quilt")
 

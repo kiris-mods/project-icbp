@@ -1,85 +1,53 @@
 plugins {
 	id 'idea'
 	id 'maven-publish'
-	id 'net.neoforged.gradle' version '[6.0.18,6.2)'
-	id 'org.spongepowered.mixin' version '0.7-SNAPSHOT'
+	id 'net.neoforged.gradle.userdev' version '7.0.41'
 }
 
 base {
 	archivesName = "${mod_id}-neoforge-${minecraft_version}"
 }
 
-minecraft {
-	mappings channel: 'official', version: minecraft_version
+// Automatically enable neoforge AccessTransformers if the file exists
+// This location is hardcoded in FML and can not be changed.
+// https://github.com/neoforged/FancyModLoader/blob/a952595eaaddd571fbc53f43847680b00894e0c1/loader/src/main/java/net/neoforged/fml/loading/moddiscovery/ModFile.java#L118
+if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {
+	accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+}
 
-	copyIdeResources = true //Calls processResources when in dev
+runs {
+	configureEach {
+		modSource project.sourceSets.main
+		systemProperty 'forge.logging.markers', 'REGISTRIES'
+		systemProperty 'forge.logging.console.level', 'debug'
+	}
+	client {
+		if (project.hasProperty('mc_uuid')) {
+			// Your UUID, trimmed / without the dashes
+			programArgument "--uuid=${project.mc_uuid}"
+		}
 
-	// Automatically enable forge AccessTransformers if the file exists
-	// This location is hardcoded in Forge and can not be changed.
-	// https://github.com/MinecraftForge/MinecraftForge/blob/be1698bb1554f9c8fa2f58e32b9ab70bc4385e60/fmlloader/src/main/java/net/minecraftforge/fml/loading/moddiscovery/ModFile.java#L123
-	if (file('src/main/resources/META-INF/accesstransformer.cfg').exists()) {
-		accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+		if (project.hasProperty('mc_username')) {
+			// Your Minecraft in-game username, not email
+			programArgument "--username=${project.mc_username}"
+		}
 	}
 
-	runs {
-		configureEach {
-			property 'forge.logging.markers', 'REGISTRIES'
-			property 'forge.logging.console.level', 'debug'
-		}
-		client {
-			workingDirectory project.file('run')
-			ideaModule "${rootProject.name}.${project.name}.main"
-			mods {
-				modClientRun {
-					source sourceSets.main
-					source project(":common").sourceSets.main
-				}
-			}
+	server {
+		programArgument '--nogui'
+	}
 
-			if (project.hasProperty('mc_uuid')) {
-				// Your UUID, trimmed / without the dashes
-				args("--uuid=${project.mc_uuid}")
-			}
-
-			if (project.hasProperty('mc_username')) {
-				// Your Minecraft in-game username, not email
-				args("--username=${project.mc_username}")
-			}
-		}
-
-		server {
-			workingDirectory project.file('run')
-			ideaModule "${rootProject.name}.${project.name}.main"
-			args '--nogui'
-			mods {
-				modServerRun {
-					source sourceSets.main
-					source project(":common").sourceSets.main
-				}
-			}
-		}
-
-		data {
-			workingDirectory project.file('run')
-			ideaModule "${rootProject.name}.${project.name}.main"
-			args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-			mods {
-				modDataRun {
-					source sourceSets.main
-					source project(":common").sourceSets.main
-				}
-			}
-		}
+	data {
+		programArguments.addAll '--mod', mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
 	}
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-	minecraft "net.neoforged:forge:${minecraft_version}-${neoforge_version}"
+	implementation "net.neoforged:neoforge:${neoforge_version}"
 	compileOnly project(":common")
-	implementation fg.deobf("software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version_neoforge}")
-	annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+	implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version_neoforge}"
 }
 
 // NeoGradle compiles the game, but we don't want to add our common code to the game's code

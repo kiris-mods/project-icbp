@@ -57,7 +57,7 @@ loom {
 			setConfigName("Quilt Server")
 			ideConfigGenerated(true)
 			programArg("--nogui")
-			runDir("run/s")
+			runDir("run")
 		}
 	}
 }
@@ -97,3 +97,4 @@ project.configurations.configureEach {
 	exclude(group: "net.fabricmc", module: "fabric-loader")
 	exclude(group: "net.fabricmc.fabric-api")
 }
+

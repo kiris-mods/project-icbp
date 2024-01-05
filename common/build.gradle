@@ -18,7 +18,7 @@ minecraft {
 dependencies {
 	compileOnly "org.spongepowered:mixin:0.8.5"
 	implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-	compileOnly "software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version_forge}"
+	compileOnly "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version_neoforge}"
 }
 
 publishing {
