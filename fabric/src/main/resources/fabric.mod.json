@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${mod_name}",
+  "description": "${description}",
+  "authors": [
+    "${author}"
+  ],
+  "contact": {
+    "homepage": "${display_url}",
+    "sources": "${mod_source}",
+    "issues": "${mod_source}/issues"
+  },
+  "license": "${license}",
+  "icon": "logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.tophatcat.projecticbp.ProjectICBPFabric"
+    ],
+    "client": [
+      "dev.tophatcat.projecticbp.client.BallisticRenderingFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${fabric_loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}",
+    "geckolib": "${geckolib_fabric_version}",
+    "java": ">=${java_version}"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "${discord}",
+        "modmenu.modrinth": "${modrinth_url}",
+        "modmenu.curseforge": "${curseforge_url}"
+      },
+      "update_checker": true
+    },
+    "mc-publish": {
+      "curseforge": "${curseforge_id}",
+      "modrinth": "${modrinth_id}",
+      "loaders": [
+        "fabric"
+      ],
+      "dependencies": [
+        "fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}",
+        "geckolib(required){modrinth:8BmcQJ2H}{curseforge:388172}"
+      ]
+    }
+  }
+}
