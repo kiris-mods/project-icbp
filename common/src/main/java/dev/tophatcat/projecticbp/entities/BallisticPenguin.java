@@ -79,7 +79,7 @@ public class BallisticPenguin extends Monster implements GeoEntity {
     protected void registerGoals() {
         //TODO Maybe move to brains if anyone wants to help?
         goalSelector.addGoal(0, new FloatGoal(this));
-        goalSelector.addGoal(2, new RandomStrollGoal(this, 1.0F));
+        goalSelector.addGoal(2, new RandomStrollGoal(this, 0.8F));
         goalSelector.addGoal(3, new AvoidEntityGoal<>(this, PolarBear.class, 6.0F, 1.0, 1.2));
         goalSelector.addGoal(3, new RandomLookAroundGoal(this));
         goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
