@@ -28,11 +28,25 @@ ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
-modId="geckolib"
-required=true
-versionRange="[${geckolib_neoforge_version},)"
-ordering="NONE"
-side="BOTH"
+modId = "smartbrainlib"
+required = true
+versionRange = "[${smart_brain_lib_neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "geckolib"
+required = true
+versionRange = "[${geckolib_neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "resourcefulconfig"
+required = true
+versionRange = "[${resourceful_config_neoforge_version},)"
+ordering = "NONE"
+side = "BOTH"
 
 [mc-publish]
 curseforge = "${curseforge_id}"

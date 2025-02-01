@@ -27,7 +27,9 @@
     "fabricloader": ">=${fabric_loader_version}",
     "fabric": "*",
     "minecraft": "${minecraft_version}",
-    "geckolib": "${geckolib_fabric_version}",
+    "smartbrainlib": ">=${smart_brain_lib_fabric_version}",
+    "geckolib": ">=${geckolib_fabric_version}",
+    "resourcefulconfig": ">=${resourceful_config_fabric_version}",
     "java": ">=${java_version}"
   },
   "custom": {
