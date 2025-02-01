@@ -24,6 +24,7 @@ import dev.tophatcat.projecticbp.platform.IPlatformHelper;
 import dev.tophatcat.projecticbp.registry.BallisticCreativeTabRegistry;
 import dev.tophatcat.projecticbp.registry.BallisticEntityRegistry;
 import dev.tophatcat.projecticbp.registry.BallisticItemRegistry;
+import dev.tophatcat.projecticbp.registry.BallisticMemoryTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -43,5 +44,6 @@ public class ProjectICBPCommon {
         BallisticEntityRegistry.init();
         BallisticItemRegistry.init();
         BallisticCreativeTabRegistry.init();
+        BallisticMemoryTypes.init();
     }
 }

@@ -30,6 +30,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SpawnEggItem;
@@ -94,6 +95,11 @@ public class PlatformHelperFabric implements IPlatformHelper {
     @Override
     public CreativeModeTab.Builder newCreativeTabBuilder() {
         return FabricItemGroup.builder();
+    }
+
+    @Override
+    public <T> Supplier<MemoryModuleType<T>> registerMemoryModuleType(String name, Supplier<MemoryModuleType<T>> memoryModuleType) {
+        return registerSupplier(BuiltInRegistries.MEMORY_MODULE_TYPE, name, memoryModuleType);
     }
 
     /**

@@ -20,10 +20,12 @@
  */
 package dev.tophatcat.projecticbp.entities;
 
+import dev.tophatcat.projecticbp.registry.BallisticMemoryTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
+import net.minecraft.util.Unit;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
@@ -32,20 +34,32 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
-import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
-import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
-import net.minecraft.world.entity.animal.PolarBear;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.phys.Vec3;
+import net.tslat.smartbrainlib.api.SmartBrainOwner;
+import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
+import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.move.AvoidEntity;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
+import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
+import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -55,8 +69,10 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.List;
+
 //TODO If fed raw fish, will not attack nearby players or agro for 5m (real world time)
-public class BallisticPenguin extends Monster implements GeoEntity {
+public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOwner<BallisticPenguin> {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
@@ -67,22 +83,9 @@ public class BallisticPenguin extends Monster implements GeoEntity {
     private boolean IS_ATTACKING;
     // Stay friendly for around 5 or 10 minutes.
     private static final UniformInt PERSISTENT_FRIENDLY_TIME = TimeUtil.rangeOfSeconds(300, 600);
-    // The remaining time the Penguin will be friendly for.
-    private int remainingPersistentFriendlyTime;
-    private boolean IS_ANGRY;
 
     public BallisticPenguin(EntityType<? extends BallisticPenguin> type, Level level) {
         super(type, level);
-    }
-
-    @Override
-    protected void registerGoals() {
-        //TODO Maybe move to brains if anyone wants to help?
-        goalSelector.addGoal(0, new FloatGoal(this));
-        goalSelector.addGoal(2, new RandomStrollGoal(this, 0.8F));
-        goalSelector.addGoal(3, new AvoidEntityGoal<>(this, PolarBear.class, 6.0F, 1.0, 1.2));
-        goalSelector.addGoal(3, new RandomLookAroundGoal(this));
-        goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -118,11 +121,11 @@ public class BallisticPenguin extends Monster implements GeoEntity {
     public InteractionResult interactAt(Player player, @NotNull Vec3 hitPos, @NotNull InteractionHand hand) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
-            if (item.is(ItemTags.FISHES) && IS_ANGRY) {
-                if (player.getAbilities().instabuild) {
+            if (item.is(ItemTags.FISHES) && !BrainUtils.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
+                if (!player.getAbilities().instabuild) {
                     item.shrink(1);
-                    IS_ANGRY = false;
                 }
+                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20); // Set random time, in ticks, so multiplied by 20
             }
         }
         return super.interactAt(player, hitPos, hand);
@@ -164,5 +167,64 @@ public class BallisticPenguin extends Monster implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
+    }
+
+    // Brain stuff start
+    @Override
+    protected void customServerAiStep() {
+        tickBrain(this); // Make brain tick on the server
+    }
+
+    @Override
+    protected Brain.@NotNull Provider<?> brainProvider() {
+        return new SmartBrainProvider<>(this); // Replace Brain Provider with SmartBrainLib version
+    }
+
+    @Override
+    public List<? extends ExtendedSensor<? extends BallisticPenguin>> getSensors() {
+        return List.of( // Add Sensors to scan for stuff we find interesting
+            new NearbyPlayersSensor<>(),
+            new NearbyLivingEntitySensor<>()
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends BallisticPenguin> getCoreTasks() {
+        return BrainActivityGroup.coreTasks( // High priority tasks we always want to be doing
+            new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
+                .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from
+                .startCondition(BallisticPenguin::isAngry), // Only set an attack target if isAngry()
+            new AvoidEntity<>()
+                .avoiding(e->e.getType() == EntityType.POLAR_BEAR)
+                .speedModifier(2f)
+                .noCloserThan(7f)
+                .stopCaringAfter(12f),
+            new LookAtTarget<>(), // If we have a look target, look at target
+            new MoveToWalkTarget<>() // If we have a move target, move to it
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends BallisticPenguin> getFightTasks() {
+        return BrainActivityGroup.fightTasks( // Combat tasks
+            new InvalidateAttackTarget<>() // Make sure the target is still valid, and we haven't been failing to path to it for too long
+            // Here is where we would launch at the enemy
+        );
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public BrainActivityGroup<? extends BallisticPenguin> getIdleTasks() {
+        return BrainActivityGroup.idleTasks( // Fallback tasks
+            new OneRandomBehaviour<>( // Do one of these things, chosen randomly
+                new SetRandomLookTarget<>(), // Look around randomly
+                new SetRandomWalkTarget<>(), // RandomStrollGoal equivalent
+                new Idle<>().runFor(e->e.getRandom().nextInt(20, 40)) // Do nothing, for 1 to 4 seconds
+            ).cooldownFor(e->e.getRandom().nextInt(80))
+        );
+    }
+
+    public boolean isAngry() {
+        return !BrainUtils.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get());
     }
 }
