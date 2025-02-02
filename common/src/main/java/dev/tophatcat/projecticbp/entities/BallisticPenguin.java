@@ -47,6 +47,7 @@ import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
+import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
@@ -194,11 +195,6 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
             new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
                 .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from
                 .startCondition(BallisticPenguin::isAngry), // Only set an attack target if isAngry()
-            new AvoidEntity<>()
-                .avoiding(e->e.getType() == EntityType.POLAR_BEAR)
-                .speedModifier(2f)
-                .noCloserThan(7f)
-                .stopCaringAfter(12f),
             new LookAtTarget<>(), // If we have a look target, look at target
             new MoveToWalkTarget<>() // If we have a move target, move to it
         );
@@ -216,11 +212,18 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     @Override
     public BrainActivityGroup<? extends BallisticPenguin> getIdleTasks() {
         return BrainActivityGroup.idleTasks( // Fallback tasks
-            new OneRandomBehaviour<>( // Do one of these things, chosen randomly
-                new SetRandomLookTarget<>(), // Look around randomly
-                new SetRandomWalkTarget<>(), // RandomStrollGoal equivalent
-                new Idle<>().runFor(e->e.getRandom().nextInt(20, 40)) // Do nothing, for 1 to 4 seconds
-            ).cooldownFor(e->e.getRandom().nextInt(80))
+            new FirstApplicableBehaviour<>( // Try these in order, until you find one to do
+                new AvoidEntity<>() // If there is a polar bear nearby, run away
+                    .avoiding(e->e.getType() == EntityType.POLAR_BEAR) // Polar bears only
+                    .speedModifier(1.8f) // Run away at this speed modifier
+                    .noCloserThan(7f) // How close can we get before running away
+                    .stopCaringAfter(12f), // How far to get before stopping
+                new OneRandomBehaviour<>( // Else, do one of these
+                    new SetRandomLookTarget<>(), // Look around randomly
+                    new SetRandomWalkTarget<>(), // Set a random nearby walk target
+                    new Idle<>().runFor(e -> e.getRandom().nextInt(20, 40)) // Do nothing, for 1 to 2 seconds
+                )
+            )
         );
     }
 
