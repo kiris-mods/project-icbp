@@ -13,6 +13,7 @@ public class BallisticMemoryTypes {
     }
 
     public static final Supplier<MemoryModuleType<Unit>> CALMED = registerMemoryType("calmed", ()-> new MemoryModuleType<>(Optional.of(Unit.CODEC)));
+    public static final Supplier<MemoryModuleType<Unit>> EATEN_FISH = registerMemoryType("eaten_fish", ()-> new MemoryModuleType<>(Optional.of(Unit.CODEC)));
 
     private static <T> Supplier<MemoryModuleType<T>> registerMemoryType(String name, Supplier<MemoryModuleType<T>> memoryModuleType) {
         return ProjectICBPCommon.COMMON_PLATFORM.registerMemoryModuleType(name, memoryModuleType);
