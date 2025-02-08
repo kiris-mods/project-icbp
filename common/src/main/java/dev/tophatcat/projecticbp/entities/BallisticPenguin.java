@@ -130,6 +130,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
                 int cooldown = PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20; // Set random time, in ticks, so multiplied by 20
                 BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, cooldown);
                 BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, cooldown);
+                return InteractionResult.sidedSuccess(player.level().isClientSide);
             }
         }
         return super.interactAt(player, hitPos, hand);
