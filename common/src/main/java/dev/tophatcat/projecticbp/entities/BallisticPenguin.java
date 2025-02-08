@@ -58,6 +58,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttack
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -185,7 +186,9 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     public List<? extends ExtendedSensor<? extends BallisticPenguin>> getSensors() {
         return List.of( // Add Sensors to scan for stuff we find interesting
             new NearbyPlayersSensor<>(),
-            new NearbyLivingEntitySensor<>()
+            new NearbyLivingEntitySensor<>(),
+            new HurtBySensor<BallisticPenguin>() // Keep track of attacks by players
+                .setPredicate((damageSource, mob) -> damageSource.getEntity() instanceof Player)
         );
     }
 
