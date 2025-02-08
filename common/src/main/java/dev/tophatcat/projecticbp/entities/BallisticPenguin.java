@@ -108,7 +108,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
             return false;
         } else {
             if (source.getEntity() instanceof Player) {
-                BrainUtils.clearMemory(this, BallisticMemoryTypes.EATEN_FISH.get()); // Reset calm timer
+                BrainUtils.clearMemory(this, BallisticMemoryTypes.CALMED.get()); // Reset calm timer
                 //transformIntoAttackMode();
                 //attackPlayer();
             }
@@ -123,11 +123,11 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     public InteractionResult interactAt(Player player, @NotNull Vec3 hitPos, @NotNull InteractionHand hand) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
-            if (item.is(ItemTags.FISHES) && !BrainUtils.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
+            if (item.is(ItemTags.FISHES) && !BrainUtils.hasMemory(this, BallisticMemoryTypes.CALMED.get())) {
                 if (!player.getAbilities().instabuild) {
                     item.shrink(1);
                 }
-                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20); // Set random time, in ticks, so multiplied by 20
+                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20); // Set random time, in ticks, so multiplied by 20
             }
         }
         return super.interactAt(player, hitPos, hand);
@@ -231,6 +231,6 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     }
 
     public boolean isAngry() {
-        return !BrainUtils.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get());
+        return !BrainUtils.hasMemory(this, BallisticMemoryTypes.CALMED.get());
     }
 }
