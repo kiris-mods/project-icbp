@@ -123,11 +123,13 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     public InteractionResult interactAt(Player player, @NotNull Vec3 hitPos, @NotNull InteractionHand hand) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
-            if (item.is(ItemTags.FISHES) && !BrainUtils.hasMemory(this, BallisticMemoryTypes.CALMED.get())) {
+            if (item.is(ItemTags.FISHES) && !BrainUtils.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
                 if (!player.getAbilities().instabuild) {
                     item.shrink(1);
                 }
-                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20); // Set random time, in ticks, so multiplied by 20
+                int cooldown = PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20; // Set random time, in ticks, so multiplied by 20
+                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, cooldown);
+                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, cooldown);
             }
         }
         return super.interactAt(player, hitPos, hand);
