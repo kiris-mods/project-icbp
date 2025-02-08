@@ -108,7 +108,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
             return false;
         } else {
             if (source.getEntity() instanceof Player) {
-                //resetHappyTimer();
+                BrainUtils.clearMemory(this, BallisticMemoryTypes.EATEN_FISH.get()); // Reset calm timer
                 //transformIntoAttackMode();
                 //attackPlayer();
             }
