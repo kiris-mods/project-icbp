@@ -195,9 +195,6 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     @Override
     public BrainActivityGroup<? extends BallisticPenguin> getCoreTasks() {
         return BrainActivityGroup.coreTasks( // High priority tasks we always want to be doing
-            new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
-                .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from
-                .startCondition(BallisticPenguin::isAngry), // Only set an attack target if isAngry()
             new LookAtTarget<>(), // If we have a look target, look at target
             new MoveToWalkTarget<>() // If we have a move target, move to it
         );
@@ -206,7 +203,10 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     @Override
     public BrainActivityGroup<? extends BallisticPenguin> getFightTasks() {
         return BrainActivityGroup.fightTasks( // Combat tasks
-            new InvalidateAttackTarget<>() // Make sure the target is still valid, and we haven't been failing to path to it for too long
+            new InvalidateAttackTarget<>(), // Make sure the target is still valid, and we haven't been failing to path to it for too long
+            new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
+                .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from
+                .startCondition(BallisticPenguin::isAngry) // Only set an attack target if isAngry()
             // Here is where we would launch at the enemy
         );
     }
