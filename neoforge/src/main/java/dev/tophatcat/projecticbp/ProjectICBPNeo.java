@@ -24,13 +24,10 @@ import dev.tophatcat.projecticbp.client.BallisticRenderingNeo;
 import dev.tophatcat.projecticbp.entities.BallisticPenguin;
 import dev.tophatcat.projecticbp.registry.BallisticEntityRegistry;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.SpawnPlacementType;
 import net.minecraft.world.entity.SpawnPlacementTypes;
-import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -59,6 +56,8 @@ public class ProjectICBPNeo {
         Registries.CREATIVE_MODE_TAB, ProjectICBPCommon.MOD_ID);
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(
         Registries.ITEM, ProjectICBPCommon.MOD_ID);
+    public static final DeferredRegister<MemoryModuleType<?>> MEMORY_MODULE_TYPES = DeferredRegister.create(
+        Registries.MEMORY_MODULE_TYPE, ProjectICBPCommon.MOD_ID);
 
     public ProjectICBPNeo(IEventBus bus) {
         SOUND_EVENTS.register(bus);
@@ -67,6 +66,7 @@ public class ProjectICBPNeo {
         ENTITIES.register(bus);
         CREATIVE_TABS.register(bus);
         ITEMS.register(bus);
+        MEMORY_MODULE_TYPES.register(bus);
         bus.<EntityAttributeCreationEvent>addListener(event
             -> BallisticEntityRegistry.registerEntityAttributes(event::put));
         ProjectICBPCommon.init();
