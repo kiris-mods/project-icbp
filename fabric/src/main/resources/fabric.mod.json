@@ -49,7 +49,9 @@
       ],
       "dependencies": [
         "fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}",
-        "geckolib(required){modrinth:8BmcQJ2H}{curseforge:388172}"
+        "smartbrainlib(required){modrinth:PuyPazRT}{curseforge:661293}",
+        "geckolib(required){modrinth:8BmcQJ2H}{curseforge:388172}",
+        "resourcefulconfig(required){modrinth:M1953qlQ}{curseforge:714059}"
       ]
     }
   }

@@ -79,8 +79,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
-    private static final RawAnimation TRANSITION_TO_ATTACK = RawAnimation.begin().thenPlay("transition_to_attack");
-    private static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("attack");
+    private static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("transition_to_attack").thenPlay("attack");
 
     private boolean IS_ATTACKING;
     // Stay friendly for around 5 or 10 minutes.
@@ -109,17 +108,17 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
         } else {
             if (source.getEntity() instanceof Player) {
                 BrainUtils.clearMemory(this, BallisticMemoryTypes.CALMED.get()); // Reset calm timer
-                //transformIntoAttackMode();
-                //attackPlayer();
+                //attackHurtByEntity();
             }
         }
         return super.hurt(source, damageAmount);
     }
 
+    /**
+     * When fed fish, don't attack players for about 3 to 5 min afterward, only accept one fish at a time.
+     */
     @NotNull
     @Override
-    //TODO Come back here!! Need to finish this!
-    //When fed fish, don't attack players for about 3 to 5 min afterwards, only accept one fish at a time.
     public InteractionResult interactAt(Player player, @NotNull Vec3 hitPos, @NotNull InteractionHand hand) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
@@ -145,7 +144,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(walkAndIdleController(this));
-        //controllers.add(attackController(this));
+        controllers.add(attackController(this));
     }
 
     private <T extends BallisticPenguin & GeoAnimatable> AnimationController<T> walkAndIdleController(T entity) {
