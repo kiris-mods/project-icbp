@@ -74,6 +74,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.List;
 
 //TODO If fed raw fish, will not attack nearby players or agro for 5m (real world time)
+//TODO Might need to use synced data for IS_ATTACKING.
 public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOwner<BallisticPenguin> {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
@@ -202,17 +203,6 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
         );
     }
 
-    @Override
-    public BrainActivityGroup<? extends BallisticPenguin> getFightTasks() {
-        return BrainActivityGroup.fightTasks( // Combat tasks
-            new InvalidateAttackTarget<>(), // Make sure the target is still valid, and we haven't been failing to path to it for too long
-            new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
-                .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from
-                .startCondition(BallisticPenguin::isAngry) // Only set an attack target if isAngry()
-            // Here is where we would launch at the enemy
-        );
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public BrainActivityGroup<? extends BallisticPenguin> getIdleTasks() {
@@ -228,7 +218,18 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
                     new SetRandomWalkTarget<>(), // Set a random nearby walk target
                     new Idle<>().runFor(e -> e.getRandom().nextInt(20, 40)) // Do nothing, for 1 to 2 seconds
                 )
-            )
+            ),
+            new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
+                .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from.
+                .startCondition(BallisticPenguin::isAngry) // Only set an attack target if isAngry()
+        );
+    }
+
+    @Override
+    public BrainActivityGroup<? extends BallisticPenguin> getFightTasks() {
+        return BrainActivityGroup.fightTasks( // Combat tasks
+            new InvalidateAttackTarget<>() // Make sure the target is still valid, and we haven't been failing to path to it for too long
+            // Here is where we would launch at the enemy
         );
     }
 
