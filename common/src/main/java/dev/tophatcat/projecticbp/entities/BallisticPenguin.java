@@ -31,6 +31,9 @@ import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
@@ -55,7 +58,6 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.move.AvoidEntity;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
@@ -71,16 +73,23 @@ import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Collection;
 import java.util.List;
 
-//TODO If fed raw fish, will not attack nearby players or agro for 5m (real world time)
-//TODO Might need to use synced data for IS_ATTACKING.
+// TODO Might need to use synced data for IS_ATTACKING and other animation states.
+// TODO When attacking the mob should transition to laying down then start charging the player to then explode on impact. (Think creeper like)
+// TODO If fed raw fish, will not attack nearby players or agro for between 5 and 10 minutes (real world time)
+// TODO When fed fish the mob should TRANSITION_TO_IDLE and reset to friendly for the PERSISTENT_FRIENDLY_TIME
+// TODO Check for bugs and fix things that seem weird in it's behaviour.
+// TODO Go over spawning code to make SURE it only spawns in snowy biomes, it *should* but I'm not certain...
+
 public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOwner<BallisticPenguin> {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
     private static final RawAnimation WALK = RawAnimation.begin().thenLoop("walk");
     private static final RawAnimation ATTACK = RawAnimation.begin().thenPlay("transition_to_attack").thenPlay("attack");
+    private static final RawAnimation TRANSITION_TO_IDLE = RawAnimation.begin().thenPlay("transition_to_idle");
 
     private boolean IS_ATTACKING;
     // Stay friendly for around 5 or 10 minutes.
@@ -99,7 +108,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
 
     public static boolean checkSpawnRules(EntityType<? extends BallisticPenguin> type, LevelAccessor accessor,
                                           MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
-        return accessor.getDifficulty() == Difficulty.PEACEFUL;
+        return accessor.getDifficulty() != Difficulty.PEACEFUL;
     }
 
     @Override
@@ -218,10 +227,12 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
                     new SetRandomWalkTarget<>(), // Set a random nearby walk target
                     new Idle<>().runFor(e -> e.getRandom().nextInt(20, 40)) // Do nothing, for 1 to 2 seconds
                 )
-            ),
-            new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
-                .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from.
-                .startCondition(BallisticPenguin::isAngry) // Only set an attack target if isAngry()
+            )
+            //,
+            // TODO Enable this once someone can figure out why it's not working at all, the mob just stands idle when this is enabled...
+            //new SetAttackTarget<BallisticPenguin>(false) // If there is no attack target, set an attack target
+            //    .targetFinder(penguin -> BrainUtils.getMemory(penguin, MemoryModuleType.NEAREST_VISIBLE_PLAYER)) // Change what memory we get the attack target from.
+            //    .startCondition(BallisticPenguin::isAngry) // Only set an attack target if isAngry()
         );
     }
 
@@ -235,5 +246,33 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
 
     public boolean isAngry() {
         return !BrainUtils.hasMemory(this, BallisticMemoryTypes.CALMED.get());
+    }
+
+    private void explodeOnImpact() {
+        if (!this.level().isClientSide) {
+            this.dead = true;
+            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 3 * 1.5F, Level.ExplosionInteraction.MOB);
+            this.spawnLingeringCloud();
+            this.triggerOnDeathMobEffects(Entity.RemovalReason.KILLED);
+            this.discard();
+        }
+    }
+
+    private void spawnLingeringCloud() {
+        Collection<MobEffectInstance> collection = this.getActiveEffects();
+        if (!collection.isEmpty()) {
+            AreaEffectCloud areaeffectcloud = new AreaEffectCloud(this.level(), this.getX(), this.getY(), this.getZ());
+            areaeffectcloud.setRadius(2.5F);
+            areaeffectcloud.setRadiusOnUse(-0.5F);
+            areaeffectcloud.setWaitTime(10);
+            areaeffectcloud.setDuration(areaeffectcloud.getDuration() / 2);
+            areaeffectcloud.setRadiusPerTick(-areaeffectcloud.getRadius() / (float)areaeffectcloud.getDuration());
+
+            for (MobEffectInstance mobeffectinstance : collection) {
+                areaeffectcloud.addEffect(new MobEffectInstance(mobeffectinstance));
+            }
+
+            this.level().addFreshEntity(areaeffectcloud);
+        }
     }
 }
