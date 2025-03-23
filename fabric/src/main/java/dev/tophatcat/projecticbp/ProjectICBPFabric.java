@@ -25,6 +25,7 @@ import dev.tophatcat.projecticbp.registry.BallisticEntityRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
@@ -42,7 +43,7 @@ public class ProjectICBPFabric implements ModInitializer {
 
     private void setupSpawns() {
         BiomeModifications.addSpawn(biome -> biome.getBiomeRegistryEntry().is(
-                Biomes.SNOWY_TAIGA), MobCategory.CREATURE, BallisticEntityRegistry.BALLISTIC_PENGUIN.get(),
+                ProjectICBPCommon.SPAWN_BALLISTIC_PENGUIN), MobCategory.CREATURE, BallisticEntityRegistry.BALLISTIC_PENGUIN.get(),
             30, 2, 3);
         SpawnPlacements.register(BallisticEntityRegistry.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
             Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguin::checkSpawnRules);

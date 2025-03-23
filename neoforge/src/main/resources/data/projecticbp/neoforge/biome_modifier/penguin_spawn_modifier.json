@@ -5,8 +5,8 @@
     {
       "type": "projecticbp:ballistic_penguin",
       "weight": 30,
-      "minCount": 1,
-      "maxCount": 2
+      "minCount": 2,
+      "maxCount": 3
     }
   ]
 }
