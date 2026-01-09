@@ -46,7 +46,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
@@ -129,20 +128,18 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
      */
     @NotNull
     @Override
-    public InteractionResult interactAt(Player player, @NotNull Vec3 hitPos, @NotNull InteractionHand hand) {
+    public InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
             if (item.is(ItemTags.FISHES) && !BrainUtil.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
-                if (!player.getAbilities().instabuild) {
-                    item.shrink(1);
-                }
+                usePlayerItem(player, hand, item);
                 int cooldown = PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20; // Set random time, in ticks, so multiplied by 20
                 BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, cooldown);
                 BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, cooldown);
                 return InteractionResult.SUCCESS;
             }
         }
-        return super.interactAt(player, hitPos, hand);
+        return super.mobInteract(player, hand);
     }
 
     @Override
