@@ -1,0 +1,12 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": "#project_icbp:allows_surface_penguin_spawns",
+  "spawners": [
+    {
+      "type": "project_icbp:ballistic_penguin",
+      "weight": 30,
+      "minCount": 2,
+      "maxCount": 3
+    }
+  ]
+}
