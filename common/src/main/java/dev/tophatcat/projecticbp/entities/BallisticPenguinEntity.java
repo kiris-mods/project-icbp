@@ -133,9 +133,7 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
             if (item.is(ItemTags.FISHES) && !BrainUtil.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
-                if (!player.getAbilities().instabuild) {
-                    item.shrink(1);
-                }
+                usePlayerItem(player, hand, item);
                 int cooldown = PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20; // Set random time, in ticks, so multiplied by 20
                 BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, cooldown);
                 BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, cooldown);
