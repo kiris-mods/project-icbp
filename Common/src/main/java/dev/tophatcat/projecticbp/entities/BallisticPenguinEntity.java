@@ -22,7 +22,10 @@ package dev.tophatcat.projecticbp.entities;
 
 import dev.tophatcat.projecticbp.registry.BallisticMemoryTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
@@ -136,10 +139,28 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
                 int cooldown = PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20; // Set random time, in ticks, so multiplied by 20
                 BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, cooldown);
                 BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, cooldown);
+                onEat();
                 return InteractionResult.SUCCESS;
             }
         }
         return super.mobInteract(player, hand);
+    }
+
+    private void onEat() {
+        Level level = level();
+        level.playSound(null, this, SoundEvents.GENERIC_EAT.value(), SoundSource.HOSTILE, 1f, 1f);
+        if (level.isClientSide()) {
+            for (int i = 0; i < random.nextInt(3, 8); i++) {
+                addHeartParticle(level);
+            }
+        }
+    }
+
+    private void addHeartParticle(Level level) {
+        double xVelocity = this.random.nextGaussian() * 0.02;
+        double yVelocity = this.random.nextGaussian() * 0.02;
+        double zVelocity = this.random.nextGaussian() * 0.02;
+        level.addParticle(ParticleTypes.HEART, this.getRandomX(1.0), this.getRandomY() + 0.5, this.getRandomZ(1.0), xVelocity, yVelocity, zVelocity);
     }
 
     @Override
