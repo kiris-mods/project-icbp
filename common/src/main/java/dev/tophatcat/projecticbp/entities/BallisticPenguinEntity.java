@@ -129,7 +129,7 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
      */
     @NotNull
     @Override
-    public InteractionResult interactAt(Player player, @NotNull Vec3 hitPos, @NotNull InteractionHand hand) {
+    public InteractionResult mobInteract(Player player, @NotNull InteractionHand hand) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
             if (item.is(ItemTags.FISHES) && !BrainUtil.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
@@ -142,7 +142,7 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
                 return InteractionResult.SUCCESS;
             }
         }
-        return super.interactAt(player, hitPos, hand);
+        return super.mobInteract(player, hand);
     }
 
     @Override
