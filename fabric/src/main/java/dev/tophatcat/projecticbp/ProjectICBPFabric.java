@@ -20,32 +20,30 @@
  */
 package dev.tophatcat.projecticbp;
 
-import dev.tophatcat.projecticbp.entities.BallisticPenguin;
-import dev.tophatcat.projecticbp.registry.BallisticEntityRegistry;
+import dev.tophatcat.projecticbp.entities.BallisticPenguinEntity;
+import dev.tophatcat.projecticbp.registry.BallisticEntities;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.SpawnPlacements;
-import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 public class ProjectICBPFabric implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ProjectICBPCommon.init();
-        BallisticEntityRegistry.registerEntityAttributes(FabricDefaultAttributeRegistry::register);
+        ProjectICBP.init();
+        BallisticEntities.registerEntityAttributes(FabricDefaultAttributeRegistry::register);
         setupSpawns();
     }
 
     private void setupSpawns() {
         BiomeModifications.addSpawn(biome -> biome.getBiomeRegistryEntry().is(
-                ProjectICBPCommon.SPAWN_BALLISTIC_PENGUIN), MobCategory.CREATURE, BallisticEntityRegistry.BALLISTIC_PENGUIN.get(),
+                ProjectICBP.SPAWN_BALLISTIC_PENGUIN), MobCategory.CREATURE, BallisticEntities.BALLISTIC_PENGUIN.get(),
             30, 2, 3);
-        SpawnPlacements.register(BallisticEntityRegistry.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
-            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguin::checkSpawnRules);
+        SpawnPlacements.register(BallisticEntities.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
+            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguinEntity::checkSpawnRules);
     }
 }

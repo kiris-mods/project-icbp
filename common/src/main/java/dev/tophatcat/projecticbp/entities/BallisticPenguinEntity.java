@@ -22,6 +22,7 @@ package dev.tophatcat.projecticbp.entities;
 
 import dev.tophatcat.projecticbp.registry.BallisticMemoryTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.TimeUtil;
@@ -34,18 +35,17 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
@@ -63,12 +63,12 @@ import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
-import net.tslat.smartbrainlib.util.BrainUtils;
+import net.tslat.smartbrainlib.util.BrainUtil;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.animation.AnimationController;
 import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -83,7 +83,7 @@ import java.util.List;
 // TODO Check for bugs and fix things that seem weird in it's behaviour.
 // TODO Go over spawning code to make SURE it only spawns in snowy biomes, it *should* but I'm not certain...
 
-public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOwner<BallisticPenguin> {
+public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartBrainOwner<BallisticPenguinEntity> {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
@@ -95,7 +95,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     // Stay friendly for around 5 or 10 minutes.
     private static final UniformInt PERSISTENT_FRIENDLY_TIME = TimeUtil.rangeOfSeconds(300, 600);
 
-    public BallisticPenguin(EntityType<? extends BallisticPenguin> type, Level level) {
+    public BallisticPenguinEntity(EntityType<? extends BallisticPenguinEntity> type, Level level) {
         super(type, level);
     }
 
@@ -106,22 +106,22 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
             .add(Attributes.FOLLOW_RANGE, 20.0);
     }
 
-    public static boolean checkSpawnRules(EntityType<? extends BallisticPenguin> type, LevelAccessor accessor,
-                                          MobSpawnType spawnReason, BlockPos pos, RandomSource random) {
+    public static boolean checkSpawnRules(EntityType<? extends BallisticPenguinEntity> type, ServerLevelAccessor accessor,
+                                          EntitySpawnReason spawnReason, BlockPos pos, RandomSource random) {
         return accessor.getDifficulty() != Difficulty.PEACEFUL;
     }
 
     @Override
-    public boolean hurt(@NotNull DamageSource source, float damageAmount) {
-        if (isInvulnerableTo(source)) {
+    public boolean hurtServer(@NotNull ServerLevel level, @NotNull DamageSource source, float damageAmount) {
+        if (isInvulnerableTo(level, source)) {
             return false;
         } else {
             if (source.getEntity() instanceof Player) {
-                BrainUtils.clearMemory(this, BallisticMemoryTypes.CALMED.get()); // Reset calm timer
+                BrainUtil.clearMemory(this, BallisticMemoryTypes.CALMED.get()); // Reset calm timer
                 //attackHurtByEntity();
             }
         }
-        return super.hurt(source, damageAmount);
+        return super.hurtServer(level, source, damageAmount);
     }
 
     /**
@@ -132,14 +132,14 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     public InteractionResult interactAt(Player player, @NotNull Vec3 hitPos, @NotNull InteractionHand hand) {
         ItemStack item = player.getItemInHand(hand);
         if (hand == InteractionHand.MAIN_HAND) {
-            if (item.is(ItemTags.FISHES) && !BrainUtils.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
+            if (item.is(ItemTags.FISHES) && !BrainUtil.hasMemory(this, BallisticMemoryTypes.EATEN_FISH.get())) {
                 if (!player.getAbilities().instabuild) {
                     item.shrink(1);
                 }
                 int cooldown = PERSISTENT_FRIENDLY_TIME.sample(this.random) * 20; // Set random time, in ticks, so multiplied by 20
-                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, cooldown);
-                BrainUtils.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, cooldown);
-                return InteractionResult.sidedSuccess(player.level().isClientSide);
+                BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.CALMED.get(), Unit.INSTANCE, cooldown);
+                BrainUtil.setForgettableMemory(this, BallisticMemoryTypes.EATEN_FISH.get(), Unit.INSTANCE, cooldown);
+                return InteractionResult.sidedSuccess(player.level().isClientSide());
             }
         }
         return super.interactAt(player, hitPos, hand);
@@ -157,7 +157,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
         controllers.add(attackController(this));
     }
 
-    private <T extends BallisticPenguin & GeoAnimatable> AnimationController<T> walkAndIdleController(T entity) {
+    private <T extends BallisticPenguinEntity & GeoAnimatable> AnimationController<T> walkAndIdleController(T entity) {
         return new AnimationController<T>(entity, "Walk/Idle", 4, state -> {
             if (state.isMoving() && !IS_ATTACKING) {
                 return state.setAndContinue(WALK);
@@ -169,7 +169,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
         });
     }
 
-    private <T extends BallisticPenguin & GeoAnimatable> AnimationController<T> attackController(T entity) {
+    private <T extends BallisticPenguinEntity & GeoAnimatable> AnimationController<T> attackController(T entity) {
         return new AnimationController<T>(entity, "attack", 0, state -> {
             if (IS_ATTACKING) {
                 return state.setAndContinue(ATTACK);
@@ -178,6 +178,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
         });
     }
 
+    @NotNull
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
@@ -195,26 +196,25 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     }
 
     @Override
-    public List<? extends ExtendedSensor<? extends BallisticPenguin>> getSensors() {
+    public List<? extends ExtendedSensor<? extends BallisticPenguinEntity>> getSensors() {
         return List.of( // Add Sensors to scan for stuff we find interesting
             new NearbyPlayersSensor<>(),
             new NearbyLivingEntitySensor<>(),
-            new HurtBySensor<BallisticPenguin>() // Keep track of attacks by players
+            new HurtBySensor<BallisticPenguinEntity>() // Keep track of attacks by players
                 .setPredicate((damageSource, mob) -> damageSource.getEntity() instanceof Player)
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends BallisticPenguin> getCoreTasks() {
+    public BrainActivityGroup<? extends BallisticPenguinEntity> getCoreTasks() {
         return BrainActivityGroup.coreTasks( // High priority tasks we always want to be doing
             new LookAtTarget<>(), // If we have a look target, look at target
             new MoveToWalkTarget<>() // If we have a move target, move to it
         );
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    public BrainActivityGroup<? extends BallisticPenguin> getIdleTasks() {
+    public BrainActivityGroup<? extends BallisticPenguinEntity> getIdleTasks() {
         return BrainActivityGroup.idleTasks( // Fallback tasks
             new FirstApplicableBehaviour<>( // Try these in order, until you find one to do
                 new AvoidEntity<>() // If there is a polar bear nearby, run away
@@ -237,7 +237,7 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     }
 
     @Override
-    public BrainActivityGroup<? extends BallisticPenguin> getFightTasks() {
+    public BrainActivityGroup<? extends BallisticPenguinEntity> getFightTasks() {
         return BrainActivityGroup.fightTasks( // Combat tasks
             new InvalidateAttackTarget<>() // Make sure the target is still valid, and we haven't been failing to path to it for too long
             // Here is where we would launch at the enemy
@@ -245,11 +245,11 @@ public class BallisticPenguin extends Monster implements GeoEntity, SmartBrainOw
     }
 
     public boolean isAngry() {
-        return !BrainUtils.hasMemory(this, BallisticMemoryTypes.CALMED.get());
+        return !BrainUtil.hasMemory(this, BallisticMemoryTypes.CALMED.get());
     }
 
     private void explodeOnImpact() {
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             this.dead = true;
             this.level().explode(this, this.getX(), this.getY(), this.getZ(), 3 * 1.5F, Level.ExplosionInteraction.MOB);
             this.spawnLingeringCloud();

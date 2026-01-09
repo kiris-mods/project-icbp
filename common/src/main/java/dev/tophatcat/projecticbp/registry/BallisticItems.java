@@ -18,13 +18,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package dev.tophatcat.projecticbp.client;
+package dev.tophatcat.projecticbp.registry;
 
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import dev.tophatcat.projecticbp.platform.IPlatform;
+import net.minecraft.world.item.SpawnEggItem;
 
-public class BallisticRenderingNeo {
+import java.util.function.Supplier;
 
-    public static void registerEntityModels(EntityRenderersEvent.RegisterRenderers event) {
-        BallisticRendering.registerEntityRenderers(event::registerEntityRenderer);
-    }
+public class BallisticItems {
+
+    public static final Supplier<SpawnEggItem> BALLISTIC_PENGUIN_SPAWN_EGG
+        = IPlatform.INSTANCE.registerSpawnEgg("ballistic_penguin_spawn_egg", BallisticEntities.BALLISTIC_PENGUIN);
 }

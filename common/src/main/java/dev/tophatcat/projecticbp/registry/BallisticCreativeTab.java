@@ -18,15 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package dev.tophatcat.projecticbp.client;
+package dev.tophatcat.projecticbp.registry;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import dev.tophatcat.projecticbp.platform.IPlatform;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class BallisticRenderingFabric implements ClientModInitializer {
+import java.util.function.Supplier;
 
-    @Override
-    public void onInitializeClient() {
-        BallisticRendering.registerEntityRenderers(EntityRendererRegistry::register);
-    }
+public class BallisticCreativeTab {
+
+    public static final Supplier<CreativeModeTab> BALLISTIC_TAB
+        = IPlatform.INSTANCE.registerCreativeModeTab(
+            "ballistic_items", () -> new ItemStack(BallisticItems.BALLISTIC_PENGUIN_SPAWN_EGG::get),
+        builder -> builder.displayItems((enabledFeatures, entries) -> {
+            entries.accept(BallisticItems.BALLISTIC_PENGUIN_SPAWN_EGG.get());
+        }).build());
 }

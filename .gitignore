@@ -5,35 +5,27 @@ bin
 .metadata
 .classpath
 .project
-workspace
+/workspace/
 
 # IntelliJ
-out
+/out/
 *.ipr
 *.iws
 *.iml
-.idea/*
-buildSrc/src/main/groovy/.idea/*
-!.idea/scopes
+/.idea/*
 
 # Gradle
-build
-.gradle
+/build/
+/.gradle/
 
 # Other
-eclipse
-run
-runs
+/eclipse/
 */reports/*
-TODO.txt
 
 # Visual Studio Code
-.settings/
-.vscode/
-bin/
+/.settings/
+/.vscode/
+/bin/
 
 # MacOS
 *.DS_Store
-/common/src/generated/resources/.cache
-buildSrc/build
-buildSrc/.gradle

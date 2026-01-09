@@ -5,14 +5,19 @@
   "name": "${mod_name}",
   "description": "${description}",
   "authors": [
-    "${author}"
+    {
+      "name": "KiriCattus",
+      "contact": {
+        "homepage": "https://tophatcat.dev"
+      }
+    }
   ],
   "contact": {
-    "homepage": "${display_url}",
-    "sources": "${mod_source}",
-    "issues": "${mod_source}/issues"
+    "homepage": "${homepage_url}",
+    "sources": "${sources_url}",
+    "issues": "${issues_url}"
   },
-  "license": "${license}",
+  "license": "${license_url}",
   "icon": "logo.png",
   "environment": "*",
   "entrypoints": {
@@ -20,7 +25,7 @@
       "dev.tophatcat.projecticbp.ProjectICBPFabric"
     ],
     "client": [
-      "dev.tophatcat.projecticbp.client.BallisticRenderingFabric"
+      "dev.tophatcat.projecticbp.client.ICBPRendering"
     ]
   },
   "depends": {
@@ -29,13 +34,12 @@
     "minecraft": "${minecraft_version}",
     "smartbrainlib": ">=${smart_brain_lib_fabric_version}",
     "geckolib": ">=${geckolib_fabric_version}",
-    "resourcefulconfig": ">=${resourceful_config_fabric_version}",
     "java": ">=${java_version}"
   },
   "custom": {
     "modmenu": {
       "links": {
-        "modmenu.discord": "${discord}",
+        "modmenu.discord": "${discord_url}",
         "modmenu.modrinth": "${modrinth_url}",
         "modmenu.curseforge": "${curseforge_url}"
       },
@@ -50,8 +54,7 @@
       "dependencies": [
         "fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}",
         "smartbrainlib(required){modrinth:PuyPazRT}{curseforge:661293}",
-        "geckolib(required){modrinth:8BmcQJ2H}{curseforge:388172}",
-        "resourcefulconfig(required){modrinth:M1953qlQ}{curseforge:714059}"
+        "geckolib(required){modrinth:8BmcQJ2H}{curseforge:388172}"
       ]
     }
   }

@@ -15,6 +15,7 @@ neoForge {
 		configureEach {
 			systemProperty("neoforge.enabledGameTestNamespaces", mod_id)
 			ideName = "NeoForge ${it.name.capitalize()} (${project.path})" // Unify the run config names with fabric
+            systemProperty("terminal.ansi", "true")
 		}
 		client {
 			client()
@@ -28,7 +29,7 @@ neoForge {
 			}
 		}
 		data {
-			data()
+			clientData()
 			programArguments.addAll("--mod", mod_id, "--all", "--output", file("../common/src/generated/resources").absolutePath, "--existing", file("../common/src/main/resources").absolutePath)
 		}
 		server {
@@ -46,7 +47,6 @@ dependencies {
 	// Dependencies we use for this mod to run as we expect it to.
 	implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${minecraft_version}:${smart_brain_lib_neoforge_version}"
 	implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_neoforge_version}"
-	implementation "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21:${resourceful_config_neoforge_version}"
 
     // Optional
     implementation "maven.modrinth:jade:${jade_neoforge_version}+neoforge"

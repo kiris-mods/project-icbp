@@ -20,7 +20,8 @@
  */
 package dev.tophatcat.projecticbp.registry;
 
-import dev.tophatcat.projecticbp.ProjectICBPCommon;
+import dev.tophatcat.projecticbp.ProjectICBP;
+import dev.tophatcat.projecticbp.platform.IPlatform;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 
@@ -36,7 +37,7 @@ public class BallisticMemoryTypes {
     public static final Supplier<MemoryModuleType<Unit>> EATEN_FISH = registerMemoryType("eaten_fish", ()-> new MemoryModuleType<>(Optional.of(Unit.CODEC)));
 
     private static <T> Supplier<MemoryModuleType<T>> registerMemoryType(String name, Supplier<MemoryModuleType<T>> memoryModuleType) {
-        return ProjectICBPCommon.COMMON_PLATFORM.registerMemoryModuleType(name, memoryModuleType);
+        return IPlatform.INSTANCE.registerMemoryModuleType(name, memoryModuleType);
     }
 
 }

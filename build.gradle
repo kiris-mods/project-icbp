@@ -1,5 +1,5 @@
 plugins {
+    id "fabric-loom" version "${fabric_loom}" apply false
+    id "net.neoforged.moddev" version "${moddevgradle_version}" apply false
     id "net.neoforged.licenser" version "0.7.5" apply false
-    id "fabric-loom" version "1.9+" apply false
-    id "net.neoforged.moddev" version "2.0.66-beta" apply false
 }

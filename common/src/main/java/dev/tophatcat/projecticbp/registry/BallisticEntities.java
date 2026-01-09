@@ -20,32 +20,25 @@
  */
 package dev.tophatcat.projecticbp.registry;
 
-import dev.tophatcat.projecticbp.ProjectICBPCommon;
-import dev.tophatcat.projecticbp.entities.BallisticPenguin;
+import dev.tophatcat.projecticbp.entities.BallisticPenguinEntity;
+import dev.tophatcat.projecticbp.platform.IPlatform;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-public class BallisticEntityRegistry {
+public class BallisticEntities {
 
-    public static void init() {
-    }
-
-    public static final Supplier<EntityType<BallisticPenguin>> BALLISTIC_PENGUIN = registerEntity(
-        "ballistic_penguin", BallisticPenguin::new, 0.8F, 1.5F, 1.4F);
+    public static final Supplier<EntityType<BallisticPenguinEntity>> BALLISTIC_PENGUIN = IPlatform.INSTANCE.registerEntity(
+        "ballistic_penguin", BallisticPenguinEntity::new, MobCategory.CREATURE, builder -> builder
+            .sized(0.8F, 1.5F)
+            .eyeHeight( 1.4F)
+            .fireImmune());
 
     public static void registerEntityAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeSupplier> register) {
-        register.accept(BALLISTIC_PENGUIN.get(), BallisticPenguin.createAttributes().build());
-    }
-
-    private static <T extends Mob> Supplier<EntityType<T>> registerEntity(
-        String name, EntityType.EntityFactory<T> entity, float width, float height, float eyeHeight) {
-        return ProjectICBPCommon.COMMON_PLATFORM.registerEntity(
-            name, () -> EntityType.Builder.of(entity, MobCategory.CREATURE).sized(width, height).eyeHeight(eyeHeight).build(name));
+        register.accept(BALLISTIC_PENGUIN.get(), BallisticPenguinEntity.createAttributes().build());
     }
 }

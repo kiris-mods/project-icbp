@@ -20,14 +20,14 @@
  */
 package dev.tophatcat.projecticbp.client.model;
 
-import dev.tophatcat.projecticbp.ProjectICBPCommon;
-import dev.tophatcat.projecticbp.entities.BallisticPenguin;
-import net.minecraft.resources.ResourceLocation;
+import dev.tophatcat.projecticbp.ProjectICBP;
+import dev.tophatcat.projecticbp.entities.BallisticPenguinEntity;
+import net.minecraft.resources.Identifier;
 import software.bernie.geckolib.model.DefaultedEntityGeoModel;
 
-public class BallisticPenguinModel extends DefaultedEntityGeoModel<BallisticPenguin> {
+public class BallisticPenguinModel extends DefaultedEntityGeoModel<BallisticPenguinEntity> {
 
     public BallisticPenguinModel() {
-        super(ResourceLocation.fromNamespaceAndPath(ProjectICBPCommon.MOD_ID, "ballistic_penguin"), true);
+        super(Identifier.fromNamespaceAndPath(ProjectICBP.MOD_ID, "ballistic_penguin"));
     }
 }

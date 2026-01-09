@@ -21,11 +21,14 @@
 package dev.tophatcat.projecticbp.client.renderer;
 
 import dev.tophatcat.projecticbp.client.model.BallisticPenguinModel;
-import dev.tophatcat.projecticbp.entities.BallisticPenguin;
+import dev.tophatcat.projecticbp.entities.BallisticPenguinEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
+import software.bernie.geckolib.renderer.base.GeoRenderState;
 
-public class BallisticPenguinRenderer extends GeoEntityRenderer<BallisticPenguin> {
+public class BallisticPenguinRenderer<R extends EntityRenderState & GeoRenderState> extends GeoEntityRenderer<BallisticPenguinEntity, R> {
+
 
     public BallisticPenguinRenderer(EntityRendererProvider.Context context) {
         super(context, new BallisticPenguinModel());

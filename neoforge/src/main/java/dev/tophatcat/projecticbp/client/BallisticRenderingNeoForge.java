@@ -18,21 +18,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package dev.tophatcat.projecticbp.registry;
+package dev.tophatcat.projecticbp.client;
 
-import dev.tophatcat.projecticbp.ProjectICBPCommon;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SpawnEggItem;
+import dev.tophatcat.projecticbp.client.renderer.BallisticPenguinRenderer;
+import dev.tophatcat.projecticbp.registry.BallisticEntities;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
-import java.util.function.Supplier;
+@EventBusSubscriber(Dist.CLIENT)
+public class BallisticRenderingNeoForge {
 
-public class BallisticItemRegistry {
-
-    public static void init() {
+    @SubscribeEvent
+    public static void registerEntityModels(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(BallisticEntities.BALLISTIC_PENGUIN.get(), BallisticPenguinRenderer::new);
     }
-
-    public static final Supplier<SpawnEggItem> BALLISTIC_PENGUIN_SPAWN_EGG
-        = ProjectICBPCommon.COMMON_PLATFORM.registerItem("ballistic_penguin_spawn_egg",
-        ProjectICBPCommon.COMMON_PLATFORM.makeSpawnEgg(BallisticEntityRegistry.BALLISTIC_PENGUIN,
-            0x191919, 0xf3f3f3, new Item.Properties()));
 }

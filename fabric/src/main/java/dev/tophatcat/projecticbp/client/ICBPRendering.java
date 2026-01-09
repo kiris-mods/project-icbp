@@ -18,26 +18,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301
  * USA
  */
-package dev.tophatcat.projecticbp.registry;
+package dev.tophatcat.projecticbp.client;
 
-import dev.tophatcat.projecticbp.ProjectICBPCommon;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
+import dev.tophatcat.projecticbp.client.renderer.BallisticPenguinRenderer;
+import dev.tophatcat.projecticbp.registry.BallisticEntities;
+import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 
-import java.util.function.Supplier;
+public class ICBPRendering implements ClientModInitializer {
 
-public class BallisticCreativeTabRegistry {
-
-    public static void init() {
+    @Override
+    public void onInitializeClient() {
+        EntityRenderers.register(BallisticEntities.BALLISTIC_PENGUIN.get(), BallisticPenguinRenderer::new);
     }
-
-    public static final Supplier<CreativeModeTab> BALLISTIC_TAB
-        = ProjectICBPCommon.COMMON_PLATFORM.registerCreativeModeTab("ballistic_items",
-        () -> ProjectICBPCommon.COMMON_PLATFORM.newCreativeTabBuilder()
-        .title(Component.translatable("itemGroup." + ProjectICBPCommon.MOD_ID + ".ballistic_items"))
-        .icon(() -> new ItemStack(BallisticItemRegistry.BALLISTIC_PENGUIN_SPAWN_EGG.get()))
-        .displayItems((enabledFeatures, entries) -> {
-            entries.accept(BallisticItemRegistry.BALLISTIC_PENGUIN_SPAWN_EGG.get());
-        }).build());
 }

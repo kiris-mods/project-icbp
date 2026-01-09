@@ -20,65 +20,59 @@
  */
 package dev.tophatcat.projecticbp;
 
-import dev.tophatcat.projecticbp.client.BallisticRenderingNeo;
-import dev.tophatcat.projecticbp.entities.BallisticPenguin;
-import dev.tophatcat.projecticbp.registry.BallisticEntityRegistry;
+import dev.tophatcat.projecticbp.entities.BallisticPenguinEntity;
+import dev.tophatcat.projecticbp.registry.BallisticEntities;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.SpawnPlacementTypes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@Mod(ProjectICBPCommon.MOD_ID)
-public class ProjectICBPNeo {
+@EventBusSubscriber
+@Mod(ProjectICBP.MOD_ID)
+public class ProjectICBPNeoForge {
 
-    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(
-        Registries.SOUND_EVENT, ProjectICBPCommon.MOD_ID);
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(
-        Registries.BLOCK, ProjectICBPCommon.MOD_ID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(
-        Registries.BLOCK_ENTITY_TYPE, ProjectICBPCommon.MOD_ID);
-    public static final DeferredRegister<EntityType<?>> ENTITIES = DeferredRegister.create(
-        Registries.ENTITY_TYPE, ProjectICBPCommon.MOD_ID);
+        Registries.BLOCK_ENTITY_TYPE, ProjectICBP.MOD_ID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(ProjectICBP.MOD_ID);
+    public static final DeferredRegister.Entities ENTITIES = DeferredRegister.createEntities(ProjectICBP.MOD_ID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(ProjectICBP.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUND_EVENTS = DeferredRegister.create(
+        Registries.SOUND_EVENT, ProjectICBP.MOD_ID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(
-        Registries.CREATIVE_MODE_TAB, ProjectICBPCommon.MOD_ID);
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(
-        Registries.ITEM, ProjectICBPCommon.MOD_ID);
+        Registries.CREATIVE_MODE_TAB, ProjectICBP.MOD_ID);
     public static final DeferredRegister<MemoryModuleType<?>> MEMORY_MODULE_TYPES = DeferredRegister.create(
-        Registries.MEMORY_MODULE_TYPE, ProjectICBPCommon.MOD_ID);
+        Registries.MEMORY_MODULE_TYPE, ProjectICBP.MOD_ID);
 
-    public ProjectICBPNeo(IEventBus bus) {
-        SOUND_EVENTS.register(bus);
-        BLOCKS.register(bus);
+    public ProjectICBPNeoForge(IEventBus bus) {
         BLOCK_ENTITIES.register(bus);
+        BLOCKS.register(bus);
         ENTITIES.register(bus);
-        CREATIVE_TABS.register(bus);
         ITEMS.register(bus);
+        SOUND_EVENTS.register(bus);
+        CREATIVE_TABS.register(bus);
         MEMORY_MODULE_TYPES.register(bus);
-        bus.<EntityAttributeCreationEvent>addListener(event
-            -> BallisticEntityRegistry.registerEntityAttributes(event::put));
-        ProjectICBPCommon.init();
-        bus.addListener(this::registerSpawnPlacements);
-        if (FMLEnvironment.dist == Dist.CLIENT) {
-            bus.addListener(BallisticRenderingNeo::registerEntityModels);
-        }
+        ProjectICBP.init();
     }
 
+    @SubscribeEvent
     private void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
-        event.register(BallisticEntityRegistry.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
-            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguin::checkSpawnRules,
+        event.register(BallisticEntities.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
+            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguinEntity::checkSpawnRules,
             RegisterSpawnPlacementsEvent.Operation.AND);
+    }
+
+    @SubscribeEvent
+    private void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+        BallisticEntities.registerEntityAttributes(event::put);
     }
 }
