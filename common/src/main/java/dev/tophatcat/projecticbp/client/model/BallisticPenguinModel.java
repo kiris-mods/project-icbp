@@ -1,6 +1,6 @@
 /*
  * Oh look, a cute friendly penguin... OH! LOOK, A PENGUIN CHARGING AT US!!! Project Intercontinental Ballistic Penguin!
- * Copyright (C) KiriCattus 2013 - 2025
+ * Copyright (C) KiriCattus 2013 - 2026
  * https://github.com/kiris-mods/project-icbp/blob/dev/LICENSE.md
  *
  * This library is free software; you can redistribute it and/or

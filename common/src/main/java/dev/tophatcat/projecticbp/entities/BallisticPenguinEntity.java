@@ -1,6 +1,6 @@
 /*
  * Oh look, a cute friendly penguin... OH! LOOK, A PENGUIN CHARGING AT US!!! Project Intercontinental Ballistic Penguin!
- * Copyright (C) KiriCattus 2013 - 2025
+ * Copyright (C) KiriCattus 2013 - 2026
  * https://github.com/kiris-mods/project-icbp/blob/dev/LICENSE.md
  *
  * This library is free software; you can redistribute it and/or
@@ -158,11 +158,10 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
     }
 
     private <T extends BallisticPenguinEntity & GeoAnimatable> AnimationController<T> walkAndIdleController(T entity) {
-        return new AnimationController<T>(entity, "Walk/Idle", 4, state -> {
+        return new AnimationController<>("Walk/Idle", 4, state -> {
             if (state.isMoving() && !IS_ATTACKING) {
                 return state.setAndContinue(WALK);
-            }
-            else if (!IS_ATTACKING) {
+            } else if (!IS_ATTACKING) {
                 return state.setAndContinue(IDLE);
             }
             return null;
@@ -170,7 +169,7 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
     }
 
     private <T extends BallisticPenguinEntity & GeoAnimatable> AnimationController<T> attackController(T entity) {
-        return new AnimationController<T>(entity, "attack", 0, state -> {
+        return new AnimationController<>("attack", 0, state -> {
             if (IS_ATTACKING) {
                 return state.setAndContinue(ATTACK);
             }
@@ -186,7 +185,7 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
 
     // Brain stuff start
     @Override
-    protected void customServerAiStep() {
+    protected void customServerAiStep(@NotNull ServerLevel level) {
         tickBrain(this); // Make brain tick on the server
     }
 
@@ -218,7 +217,7 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
         return BrainActivityGroup.idleTasks( // Fallback tasks
             new FirstApplicableBehaviour<>( // Try these in order, until you find one to do
                 new AvoidEntity<>() // If there is a polar bear nearby, run away
-                    .avoiding(e->e.getType() == EntityType.POLAR_BEAR) // Polar bears only
+                    .avoiding(e -> e.getType() == EntityType.POLAR_BEAR) // Polar bears only
                     .speedModifier(1.8f) // Run away at this speed modifier
                     .noCloserThan(7f) // How close can we get before running away
                     .stopCaringAfter(12f), // How far to get before stopping
@@ -249,12 +248,15 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
     }
 
     private void explodeOnImpact() {
-        if (!this.level().isClientSide()) {
-            this.dead = true;
-            this.level().explode(this, this.getX(), this.getY(), this.getZ(), 3 * 1.5F, Level.ExplosionInteraction.MOB);
-            this.spawnLingeringCloud();
-            this.triggerOnDeathMobEffects(Entity.RemovalReason.KILLED);
-            this.discard();
+        Level level = this.level();
+        if (level instanceof ServerLevel serverlevel) {
+            if (!this.level().isClientSide()) {
+                this.dead = true;
+                this.level().explode(this, this.getX(), this.getY(), this.getZ(), 3 * 1.5F, Level.ExplosionInteraction.MOB);
+                this.spawnLingeringCloud();
+                this.triggerOnDeathMobEffects(serverlevel, Entity.RemovalReason.KILLED);
+                this.discard();
+            }
         }
     }
 
@@ -266,7 +268,7 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
             areaeffectcloud.setRadiusOnUse(-0.5F);
             areaeffectcloud.setWaitTime(10);
             areaeffectcloud.setDuration(areaeffectcloud.getDuration() / 2);
-            areaeffectcloud.setRadiusPerTick(-areaeffectcloud.getRadius() / (float)areaeffectcloud.getDuration());
+            areaeffectcloud.setRadiusPerTick(-areaeffectcloud.getRadius() / (float) areaeffectcloud.getDuration());
 
             for (MobEffectInstance mobeffectinstance : collection) {
                 areaeffectcloud.addEffect(new MobEffectInstance(mobeffectinstance));
