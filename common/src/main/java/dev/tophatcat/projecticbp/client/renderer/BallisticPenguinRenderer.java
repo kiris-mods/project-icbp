@@ -29,7 +29,6 @@ import software.bernie.geckolib.renderer.base.GeoRenderState;
 
 public class BallisticPenguinRenderer<R extends EntityRenderState & GeoRenderState> extends GeoEntityRenderer<BallisticPenguinEntity, R> {
 
-
     public BallisticPenguinRenderer(EntityRendererProvider.Context context) {
         super(context, new BallisticPenguinModel());
     }
