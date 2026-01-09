@@ -65,14 +65,14 @@ public class ProjectICBPNeoForge {
     }
 
     @SubscribeEvent
-    private void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
+    private static void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
         event.register(BallisticEntities.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
             Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguinEntity::checkSpawnRules,
             RegisterSpawnPlacementsEvent.Operation.AND);
     }
 
     @SubscribeEvent
-    private void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+    private static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
         BallisticEntities.registerEntityAttributes(event::put);
     }
 }

@@ -20,21 +20,19 @@
  */
 package dev.tophatcat.projecticbp.platform;
 
+import com.google.auto.service.AutoService;
 import dev.tophatcat.projecticbp.ProjectICBP;
 import dev.tophatcat.projecticbp.ProjectICBPNeoForge;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Util;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -48,6 +46,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
+@AutoService(IPlatform.class)
 public class PlatformNeoForge implements IPlatform {
 
     @Override
