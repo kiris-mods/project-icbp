@@ -37,7 +37,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-@EventBusSubscriber
+@EventBusSubscriber(modid = ProjectICBP.MOD_ID)
 @Mod(ProjectICBP.MOD_ID)
 public class ProjectICBPNeoForge {
 
@@ -65,14 +65,14 @@ public class ProjectICBPNeoForge {
     }
 
     @SubscribeEvent
-    private static void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
-        event.register(BallisticEntities.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
-            Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguinEntity::checkSpawnRules,
-            RegisterSpawnPlacementsEvent.Operation.AND);
+    private static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
+        BallisticEntities.registerEntityAttributes(event::put);
     }
 
     @SubscribeEvent
-    private static void registerEntityAttributes(final EntityAttributeCreationEvent event) {
-        BallisticEntities.registerEntityAttributes(event::put);
+    private static void registerSpawnPlacements(final RegisterSpawnPlacementsEvent event) {
+        event.register(BallisticEntities.BALLISTIC_PENGUIN.get(),
+            SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+            BallisticPenguinEntity::checkSpawnRules, RegisterSpawnPlacementsEvent.Operation.AND);
     }
 }
