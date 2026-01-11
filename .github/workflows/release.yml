@@ -180,7 +180,7 @@ jobs:
       - name: Notify Discord (KiriCattus)
         uses: Up-Mods/action-discord-release@main
         with:
-          project-name: Popping Presents
+          project-name: Project ICBP
           version: ${{ env.TAG }}
           webhook-url: ${{ secrets.ANNOUNCEMENT_WEBHOOK_URL }}
           webhook-username: "Mod Update News"
@@ -202,12 +202,3 @@ jobs:
           retry-count: 5
           identifier: ${{ secrets.BLUESKY_IDENTIFIER }}
           password: ${{ secrets.BLUESKY_PASSWORD }}
-
-      - name: Post to Discord
-        uses: Up-Mods/action-discord-release@main
-        with:
-          version: ${{ env.TAG }}
-          webhook-url: ${{ secrets.ANNOUNCEMENT_WEBHOOK_URL }}
-          curseforge-project-id: ${{ steps.publish_fabric.outputs.curseforge-id }}
-          modrinth-project-id: ${{ steps.publish_fabric.outputs.modrinth-id }}
-          thumbnail-url: https://raw.githubusercontent.com/kiris-mods/project-icbp/refs/heads/dev/Cóommon/src/main/resources/logo.png
