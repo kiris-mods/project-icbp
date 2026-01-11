@@ -4,7 +4,7 @@
   "spawners": [
     {
       "type": "project_icbp:ballistic_penguin",
-      "weight": 30,
+      "weight": 45,
       "minCount": 2,
       "maxCount": 3
     }

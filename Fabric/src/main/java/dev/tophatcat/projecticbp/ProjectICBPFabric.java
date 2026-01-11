@@ -42,7 +42,7 @@ public class ProjectICBPFabric implements ModInitializer {
     private void setupSpawns() {
         BiomeModifications.addSpawn(biome -> biome.getBiomeRegistryEntry().is(
                 ProjectICBP.SPAWN_BALLISTIC_PENGUIN), MobCategory.CREATURE, BallisticEntities.BALLISTIC_PENGUIN.get(),
-            30, 2, 3);
+            45, 2, 3);
         SpawnPlacements.register(BallisticEntities.BALLISTIC_PENGUIN.get(), SpawnPlacementTypes.ON_GROUND,
             Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, BallisticPenguinEntity::checkSpawnRules);
     }

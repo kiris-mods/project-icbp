@@ -21,7 +21,6 @@
 package dev.tophatcat.projecticbp.platform;
 
 import dev.tophatcat.projecticbp.ProjectICBP;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -57,19 +56,29 @@ public interface IPlatform {
     }
 
     <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(String id, Supplier<BlockEntityType<T>> blockEntityType);
+
     <T extends Block> Supplier<T> registerBlock(String id, Function<BlockBehaviour.Properties, T> factory);
+
     <T extends Block> Supplier<T> registerBlock(String id, Function<BlockBehaviour.Properties, T> factory, Supplier<BlockBehaviour.Properties> propertiesGetter);
+
     <T extends Entity> Supplier<EntityType<T>> registerEntity(String id, EntityType.EntityFactory<T> entity, MobCategory mobCategory, UnaryOperator<EntityType.Builder<T>> properties);
+
     <T extends Item> Supplier<T> registerItem(String id, Function<Item.Properties, T> factory);
+
     <T extends Item> Supplier<T> registerItem(String id, Function<Item.Properties, T> factory, Supplier<Item.Properties> propertiesGetter);
+
     <T extends SoundEvent> Supplier<T> registerSound(String id, Supplier<T> sound);
+
     Supplier<CreativeModeTab> registerCreativeModeTab(String id, Supplier<ItemStack> icon, Consumer<CreativeModeTab.Builder> tab);
+
     default <E extends Mob> Supplier<SpawnEggItem> registerSpawnEgg(String id, Supplier<EntityType<E>> entityType) {
         return registerSpawnEgg(id, entityType, Item.Properties::new);
     }
+
     default <E extends Mob> Supplier<SpawnEggItem> registerSpawnEgg(String id, Supplier<EntityType<E>> entityType, Supplier<Item.Properties> propertiesGetter) {
         return registerItem(id, SpawnEggItem::new, () -> propertiesGetter.get().spawnEgg(entityType.get()));
     }
+
     <T> Supplier<MemoryModuleType<T>> registerMemoryModuleType(String name, Supplier<MemoryModuleType<T>> memoryModuleType);
 
     enum EnvironmentType {

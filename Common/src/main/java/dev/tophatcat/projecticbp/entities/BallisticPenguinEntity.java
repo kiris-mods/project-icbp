@@ -48,6 +48,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
@@ -106,6 +107,11 @@ public class BallisticPenguinEntity extends Monster implements GeoEntity, SmartB
             .add(Attributes.MAX_HEALTH, 30.0)
             .add(Attributes.MOVEMENT_SPEED, 0.25)
             .add(Attributes.FOLLOW_RANGE, 20.0);
+    }
+
+    @Override
+    public float getWalkTargetValue(@NotNull BlockPos pos, @NotNull LevelReader level) {
+        return 0F;
     }
 
     public static boolean checkSpawnRules(EntityType<? extends BallisticPenguinEntity> type, ServerLevelAccessor accessor,

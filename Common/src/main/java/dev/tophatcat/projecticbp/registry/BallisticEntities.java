@@ -35,7 +35,7 @@ public class BallisticEntities {
     public static final Supplier<EntityType<BallisticPenguinEntity>> BALLISTIC_PENGUIN = IPlatform.INSTANCE.registerEntity(
         "ballistic_penguin", BallisticPenguinEntity::new, MobCategory.CREATURE, builder -> builder
             .sized(0.8F, 1.5F)
-            .eyeHeight( 1.4F)
+            .eyeHeight(1.4F)
             .fireImmune());
 
     public static void registerEntityAttributes(BiConsumer<EntityType<? extends LivingEntity>, AttributeSupplier> register) {

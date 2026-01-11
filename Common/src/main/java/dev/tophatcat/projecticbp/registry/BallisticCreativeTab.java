@@ -30,7 +30,7 @@ public class BallisticCreativeTab {
 
     public static final Supplier<CreativeModeTab> BALLISTIC_TAB
         = IPlatform.INSTANCE.registerCreativeModeTab(
-            "ballistic_items", () -> new ItemStack(BallisticItems.BALLISTIC_PENGUIN_SPAWN_EGG::get),
+        "ballistic_items", () -> new ItemStack(BallisticItems.BALLISTIC_PENGUIN_SPAWN_EGG::get),
         builder -> builder.displayItems((enabledFeatures, entries) -> {
             entries.accept(BallisticItems.BALLISTIC_PENGUIN_SPAWN_EGG.get());
         }).build());
